@@ -29,7 +29,7 @@ public class CohortDetail {
     private String facility;
     private String building;
     private Integer floorNumber;
-    private Integer roomNo;
+      private Integer roomNo;
 
   
     public CohortDetail() {

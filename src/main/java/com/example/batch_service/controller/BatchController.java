@@ -14,6 +14,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/batches")
+@CrossOrigin("*")
+
 public class BatchController {
 
     private final BatchService batchService;
@@ -24,13 +26,30 @@ public class BatchController {
     }
 
     @PostMapping("/add_batch")
-    public ResponseEntity<CohortDetail> createBatch(@Valid @RequestBody CohortCreationRequest request) {
+    public ResponseEntity<CohortDetail> createBatch(@Valid @RequestBody CohortDetail request) {
         try {
             CohortDetail newCohort = batchService.createCohort(request);
+            System.out.println("CreateBatch method");
             return new ResponseEntity<>(newCohort, HttpStatus.CREATED); // 201 Created
         } catch (Exception e) {
             // Catch any unexpected errors and return 500
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+ // *** NEW ENDPOINT FOR BATCH ADD ***
+    @PostMapping("/upload-batch") // Changed endpoint name for clarity
+    public ResponseEntity<String> uploadCohortDetailsBatch(@RequestBody List<CohortDetail> cohortDetailsList) {
+        try {
+            if (cohortDetailsList == null || cohortDetailsList.isEmpty()) {
+                return new ResponseEntity<>("No cohort details provided for batch upload.", HttpStatus.BAD_REQUEST);
+            }
+            batchService.createCohortsBatch(cohortDetailsList); // Use the new service method
+            return new ResponseEntity<>("Cohort details uploaded in batch successfully!", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Failed to upload cohort details in batch: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

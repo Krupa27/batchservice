@@ -23,7 +23,7 @@ public class BatchService {
     }
 
     
-    public CohortDetail createCohort(CohortCreationRequest request) {
+    public CohortDetail createCohort(CohortDetail request) {
         
         CohortDetail cohortDetail = new CohortDetail();
         cohortDetail.setCohortCode(request.getCohortCode());
@@ -45,7 +45,12 @@ public class BatchService {
      
         return cohortDetailRepository.save(cohortDetail);
     }
-
+    
+ // *** NEW METHOD FOR BATCH ADD ***
+    public List<CohortDetail> createCohortsBatch(List<CohortDetail> cohortDetailsList) {
+        // You can add validation or default setting here if needed
+        return cohortDetailRepository.saveAll(cohortDetailsList);
+    }
     
     public List<CohortDetail> getCohortsByRoomDetails(String location, String facility,
                                                      String building, Integer floorNumber, Integer roomNo) {
